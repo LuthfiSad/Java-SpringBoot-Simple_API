@@ -1,0 +1,28 @@
+package com.demo.api.demo_api.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable()) // Nonaktifkan CSRF untuk API stateless
+        .authorizeHttpRequests(auth -> auth
+            // Mengizinkan akses ke endpoint /auth/** tanpa otentikasi
+            .requestMatchers("/auth/**").permitAll()
+            // Mengizinkan akses ke beberapa endpoint lainnya tanpa otentikasi
+            .requestMatchers("/users/**", "/profile/**", "/dummy-users/**").permitAll()
+            // Mengharuskan otentikasi untuk endpoint lainnya
+            .anyRequest().authenticated())
+        // Nonaktifkan form login default dari Spring Security
+        .formLogin(form -> form.disable());
+    return http.build();
+  }
+}
