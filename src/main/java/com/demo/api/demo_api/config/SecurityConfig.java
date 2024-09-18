@@ -15,12 +15,7 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.disable()) // Nonaktifkan CSRF untuk API stateless
         .authorizeHttpRequests(auth -> auth
-            // Mengizinkan akses ke endpoint /auth/** tanpa otentikasi
-            .requestMatchers("/auth/**").permitAll()
-            // Mengizinkan akses ke beberapa endpoint lainnya tanpa otentikasi
-            .requestMatchers("/users/**", "/profile/**", "/dummy-users/**").permitAll()
-            // Mengharuskan otentikasi untuk endpoint lainnya
-            .anyRequest().authenticated())
+            .anyRequest().permitAll())
         // Nonaktifkan form login default dari Spring Security
         .formLogin(form -> form.disable());
     return http.build();
