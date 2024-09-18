@@ -6,13 +6,12 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.api.demo_api.helper.ApiResponse;
 import com.demo.api.demo_api.helper.Pagination;
@@ -23,14 +22,13 @@ import com.demo.api.demo_api.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
-@RestController
+@Controller
 @RequestMapping("/")
 public class AuthController {
   @Autowired
   private AuthService authService;
 
-  @RequestMapping("/users")
-  @PreAuthorize("hasRole('admin')")
+  @GetMapping("/users")
   public ResponseEntity<ApiResponse> index(
       @RequestParam(name = "page", required = false, defaultValue = "1") int page,
       @RequestParam(name = "perPage", required = false, defaultValue = "10") int perPage) {
@@ -42,8 +40,7 @@ public class AuthController {
     }
   }
 
-  @RequestMapping("/all-users")
-  @PreAuthorize("hasRole('admin')")
+  @GetMapping("/all-users")
   public ResponseEntity<ApiResponse> allUsers() {
     try {
       return ResponseEntity.ok(new ApiResponse("success", authService.getUsersAll()));
@@ -52,7 +49,7 @@ public class AuthController {
     }
   }
 
-  @RequestMapping("/profile")
+  @GetMapping("/profile")
   public ResponseEntity<ApiResponse> profile(HttpServletRequest request) {
     try {
       UUID userId = (UUID) request.getAttribute("userId");
