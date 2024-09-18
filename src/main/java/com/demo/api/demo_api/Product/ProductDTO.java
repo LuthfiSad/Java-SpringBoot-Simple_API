@@ -2,14 +2,9 @@ package com.demo.api.demo_api.Product;
 
 import java.math.BigDecimal;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import com.demo.api.demo_api.helper.validatorCostum.ImageValidator;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
