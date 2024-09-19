@@ -20,7 +20,7 @@ public class EndpointWebConfig implements WebMvcConfigurer {
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(jwtTokenMiddleware)
-        .addPathPatterns("/users/**", "/profile/**", "/products/**") // Middleware JWT untuk path users dan profile
+        .addPathPatterns("/users/**", "/profile/**", "/products/**", "/orders/**") // Middleware JWT untuk path users dan profile
         .excludePathPatterns("/products/images/**");
     registry.addInterceptor(AdminRoleAccessMiddleware)
         .addPathPatterns("/users/**"); // Only apply to paths requiring admin role

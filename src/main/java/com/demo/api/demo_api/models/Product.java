@@ -7,6 +7,8 @@ import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.demo.api.demo_api.DTO.ProductDTO;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -40,5 +42,16 @@ public class Product {
 
   public Product() {
     this.id = UUID.randomUUID();
+  }
+
+  public Product(ProductDTO productDTO, String imagePath) {
+    this();
+    this.setName(productDTO.getName());
+    this.setDescription(productDTO.getDescription());
+    this.setPrice(productDTO.getPrice());
+    this.setQuantity(productDTO.getQuantity());
+    this.setImage(imagePath);
+    this.setCreatedAt(LocalDateTime.now());
+    this.setUpdatedAt(LocalDateTime.now());
   }
 }

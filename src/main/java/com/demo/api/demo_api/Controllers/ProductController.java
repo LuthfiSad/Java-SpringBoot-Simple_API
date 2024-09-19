@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.demo.api.demo_api.Product.ProductDTO;
+import com.demo.api.demo_api.DTO.ProductDTO;
 import com.demo.api.demo_api.helper.ApiResponse;
 import com.demo.api.demo_api.helper.Pagination;
 import com.demo.api.demo_api.helper.exception.CustomException;
@@ -54,16 +54,16 @@ public class ProductController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse> show(@PathVariable("id") UUID id) {
+  public ResponseEntity<ApiResponse> show(@PathVariable("id") String idStr) {
     try {
-      return ResponseEntity.ok(new ApiResponse("success", productService.getProductById(id)));
+      return ResponseEntity.ok(new ApiResponse("success", productService.getProductById(idStr)));
     } catch (Exception e) {
       return new ResponseEntity<>(new ApiResponse("error", null, e.getMessage()), HttpStatus.BAD_REQUEST);
     }
   }
 
   @PostMapping
-  public ResponseEntity<?> createProduct(
+  public ResponseEntity<ApiResponse> createProduct(
       @Valid @ModelAttribute ProductDTO productDTO,
       @RequestParam("image") Optional<MultipartFile> image) {
 
@@ -75,18 +75,18 @@ public class ProductController {
       return ResponseEntity.badRequest().body(new ApiResponse("Validation Error", e.getMessage()));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(new ApiResponse("error", "An unexpected error occurred"));
+          .body(new ApiResponse("error", null, "An unexpected error occurred"));
     }
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> updateProduct(
-      @PathVariable("id") UUID id,
+  public ResponseEntity<ApiResponse> updateProduct(
+      @PathVariable("id") String idStr,
       @Valid @ModelAttribute ProductDTO productDTO,
       @RequestParam("image") Optional<MultipartFile> image) {
     try {
 
-      Product updatedProduct = productService.updateProduct(id, productDTO, image);
+      Product updatedProduct = productService.updateProduct(idStr, productDTO, image);
       return new ResponseEntity<>(new ApiResponse("success", updatedProduct),
           HttpStatus.OK);
     } catch (CustomException e) {
@@ -98,12 +98,15 @@ public class ProductController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteProduct(@PathVariable("id") UUID id) {
+  public ResponseEntity<ApiResponse> deleteProduct(@PathVariable("id") String idStr) {
     try {
-      productService.deleteProduct(id);
+      productService.deleteProduct(idStr);
       return new ResponseEntity<>(new ApiResponse("success", "Product deleted", null), HttpStatus.OK);
     } catch (CustomException e) {
-      return new ResponseEntity<>(new ApiResponse("error", null, e.getMessage()), HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body(new ApiResponse("Validation Error", e.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(new ApiResponse("error", "An unexpected error occurred"));
     }
   }
 
